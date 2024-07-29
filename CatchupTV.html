@@ -40,7 +40,7 @@
     <div class="container" id="button-container">
         <!-- Your buttons content here -->
         <!-- Button 1 -->
-        <a onclick="openAppOrFallback('nflx://', 'https://www.netflix.com')" class="button">
+        <a onclick="openAppOrFallback('nflx://www.netflix.com/browse', 'https://www.netflix.com')" class="button">
             <div class="button-content">
                 <div class="button-text">
                     <span class="description">Open</span>
@@ -53,81 +53,120 @@
             </div>
         </a>
         <!-- Button 2 -->
-        <a href="https://dobby.aweline.co.uk/rowharderupthestream/8006/playlist.m3u8" class="button">
+        <a onclick="openAppOrFallback('vnd.youtube://', 'https://www.youtube.com')" class="button">
             <div class="button-content">
                 <div class="button-text">
                     <span class="description">Open</span>
-                    <span class="title">BBC Two</span>
+                    <span class="title">YouTube</span>
                 </div>
                 <div class="button-icon">
                     <!-- Include your icon here -->
-                    <img src="images/icons/bbc2.png" alt="Icon">
+                    <img src="images/icons/youtube.png" alt="Icon">
                 </div>
             </div>
         </a>
         <!-- Button 3 -->
-        <a href="https://dobby.aweline.co.uk/rowharderupthestream/8007/playlist.m3u8" class="button">
+        <a onclick="openAppOrFallback('spotify://', 'https://www.spotify.com')" class="button">
             <div class="button-content">
                 <div class="button-text">
                     <span class="description">Open</span>
-                    <span class="title">ITV</span>
+                    <span class="title">Spotify</span>
                 </div>
                 <div class="button-icon">
                     <!-- Include your icon here -->
-                    <img src="images/icons/itv.png" alt="Icon">
+                    <img src="images/icons/spotify.png" alt="Icon">
+                </div>
+            </div>
+        </a>
+        <!-- Button 4 -->
+        <a onclick="openAppOrFallback('primevideo://', 'https://www.primevideo.com')" class="button">
+            <div class="button-content">
+                <div class="button-text">
+                    <span class="description">Open</span>
+                    <span class="title">Prime Video</span>
+                </div>
+                <div class="button-icon">
+                    <!-- Include your icon here -->
+                    <img src="images/icons/prime.png" alt="Icon">
                 </div>
             </div>
         </a>
         <!-- Repeat the same structure for each button -->
-        <!-- Button 4 -->
-        <a href="https://dobby.aweline.co.uk/rowharderupthestream/8008/playlist.m3u8" class="button">
-            <div class="button-content">
-                <div class="button-text">
-                    <span class="description">Open</span>
-                    <span class="title">Channel 4</span>
-                </div>
-                <div class="button-icon">
-                    <!-- Include your icon here -->
-                    <img src="images/icons/ch4.png" alt="Icon">
-                </div>
-            </div>
-        </a>
         <!-- Button 5 -->
-        <a href="https://dobby.aweline.co.uk/rowharderupthestream/8014/playlist.m3u8" class="button">
+        <a onclick="openAppOrFallback('bbciplayer://play', 'https://www.bbc.co.uk/iplayer')" class="button">
             <div class="button-content">
                 <div class="button-text">
                     <span class="description">Open</span>
-                    <span class="title">Channel 5</span>
+                    <span class="title">BBC iPlayer</span>
                 </div>
                 <div class="button-icon">
                     <!-- Include your icon here -->
-                    <img src="images/icons/ch5.png" alt="Icon">
+                    <img src="images/icons/iplayer.png" alt="Icon">
                 </div>
             </div>
         </a>
         <!-- Button 6 -->
-        <a href="https://dobby.aweline.co.uk/rowharderupthestream/8003/playlist.m3u8" class="button">
+        <a onclick="openAppOrFallback('itvx://play', 'https://www.itv.com')" class="button">
             <div class="button-content">
                 <div class="button-text">
                     <span class="description">Open</span>
-                    <span class="title">Dave</span>
+                    <span class="title">ITV X</span>
                 </div>
                 <div class="button-icon">
                     <!-- Include your icon here -->
-                    <img src="images/icons/dave.png" alt="Icon">
+                    <img src="images/icons/itvx.png" alt="Icon">
                 </div>
             </div>
         </a>
         <!-- Button 7 -->
-        <a href="https://dobby.aweline.co.uk/rowharderupthestream/8002/playlist.m3u8" class="button">
+        <a onclick="openAppOrFallback('all4://watch', 'https://www.channel4.com')" class="button">
             <div class="button-content">
                 <div class="button-text">
                     <span class="description">Open</span>
-                    <span class="title">Flim 4</span>
+                    <span class="title">All 4</span>
                 </div>
                 <div class="button-icon">
                     <!-- Include your icon here -->
-                    <img src="images/icons/film4.png" alt="Icon">
+                    <img src="images/icons/all4.png" alt="Icon">
+                </div>
+            </div>
+        </a>
+        <!-- Button 8 -->
+        <a onclick="openAppOrFallback('my5://', 'https://www.channel5.com')" class="button">
+            <div class="button-content">
+                <div class="button-text">
+                    <span class="description">Open</span>
+                    <span class="title">My 5</span>
+                </div>
+                <div class="button-icon">
+                    <!-- Include your icon here -->
+                    <img src="images/icons/my5.png" alt="Icon">
+                </div>
+            </div>
+        </a>
+        <!-- Button 9 -->
+        <a onclick="openAppOrFallback('disneyplus://', 'https://www.disneyplus.com')" class="button">
+            <div class="button-content">
+                <div class="button-text">
+                    <span class="description">Open</span>
+                    <span class="title">Disney +</span>
+                </div>
+                <div class="button-icon">
+                    <!-- Include your icon here -->
+                    <img src="images/icons/disney.png" alt="Icon">
+                </div>
+            </div>
+        </a>
+        <!-- Button 10 -->
+        <a onclick="openAppOrFallback('paramountplus://', 'https://www.paramountplus.com')" class="button">
+            <div class="button-content">
+                <div class="button-text">
+                    <span class="description">Open</span>
+                    <span class="title">Paramount+</span>
+                </div>
+                <div class="button-icon">
+                    <!-- Include your icon here -->
+                    <img src="images/icons/paramount.png" alt="Icon">
                 </div>
             </div>
         </a>
