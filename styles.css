@@ -114,7 +114,7 @@ body {
     width: 100%;
     max-width: 1920px;
     align-items: center;
-    justify-content: center
+    justify-content: center;
 }
 
 .video-container video {
