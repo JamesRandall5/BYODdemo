@@ -109,6 +109,17 @@ body {
     max-height: 100%; /* Ensure the icon fits within the button */
 }
 
+.video-container {
+    position: relative;
+    width: 100%;
+    max-width: 1920px;
+}
+
+.video-container video {
+    width: 100%;
+    height: auto;
+}
+
 .footer {
     display: block; /* Display the footer */
     background-color: white; /* White background color for the footer */
