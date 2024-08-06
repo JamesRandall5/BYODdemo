@@ -113,15 +113,15 @@ body {
     position: relative;
     width: 100%;
     max-width: 1920px;
-    align-items: center;
-    justify-content: center;
+    margin: 0 auto; /* Center the container horizontally */
+    display: flex; /* Add flexbox for centering the content */
+    align-items: center; /* Center items vertically if necessary */
+    justify-content: center; /* Center items horizontally */
 }
 
 .video-container video {
     width: 100%;
     height: auto;
-    align-items: center;
-    justify-content: center;
 }
 
 .footer {
