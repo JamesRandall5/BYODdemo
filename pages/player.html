@@ -73,11 +73,37 @@
             }
 
             if (Hls.isSupported()) {
-                const hls = new Hls();
+                const hlsConfig = {
+                    maxBufferLength: 30, // Adjust this value to manage buffer length
+                    maxMaxBufferLength: 600, // Maximum buffer length
+                    maxBufferSize: 60 * 1000 * 1000, // Maximum buffer size in bytes
+                    maxBufferHole: 0.5, // Maximum hole in buffer allowed
+                    lowBufferWatchdogPeriod: 0.5, // Period of the buffer watchdog checking the buffer level in seconds
+                    highBufferWatchdogPeriod: 3 // Period of the buffer watchdog checking the buffer level when it is high
+                };
+                const hls = new Hls(hlsConfig);
                 hls.loadSource(videoSrc);
                 hls.attachMedia(video);
                 hls.on(Hls.Events.MANIFEST_PARSED, function() {
                     video.play();
+                });
+                hls.on(Hls.Events.ERROR, function(event, data) {
+                    if (data.fatal) {
+                        switch (data.type) {
+                            case Hls.ErrorTypes.NETWORK_ERROR:
+                                console.error("Network error, attempting to recover...");
+                                hls.startLoad();
+                                break;
+                            case Hls.ErrorTypes.MEDIA_ERROR:
+                                console.error("Media error, attempting to recover...");
+                                hls.recoverMediaError();
+                                break;
+                            default:
+                                hls.destroy();
+                                console.error("Cannot recover from error, destroying HLS instance.");
+                                break;
+                        }
+                    }
                 });
             } else if (video.canPlayType('application/vnd.apple.mpegurl')) {
                 video.src = videoSrc;
