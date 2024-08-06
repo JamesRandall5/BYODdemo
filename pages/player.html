@@ -49,6 +49,7 @@
         </video>
     </div>
 
+    <script src="https://cdn.jsdelivr.net/npm/hls.js@latest"></script>
     <script>
         function getQueryParams() {
             const params = new URLSearchParams(window.location.search);
@@ -61,14 +62,30 @@
 
         document.addEventListener('DOMContentLoaded', () => {
             const params = getQueryParams();
-            if (params.url) {
-                document.getElementById('video-player').src = params.url;
-            }
+            const video = document.getElementById('video-player');
+            const videoSrc = params.url;
+
             if (params.title) {
                 document.getElementById('title').innerText = params.title;
             }
             if (params.logo) {
                 document.getElementById('logo').src = params.logo;
+            }
+
+            if (Hls.isSupported()) {
+                const hls = new Hls();
+                hls.loadSource(videoSrc);
+                hls.attachMedia(video);
+                hls.on(Hls.Events.MANIFEST_PARSED, function() {
+                    video.play();
+                });
+            } else if (video.canPlayType('application/vnd.apple.mpegurl')) {
+                video.src = videoSrc;
+                video.addEventListener('loadedmetadata', function() {
+                    video.play();
+                });
+            } else {
+                console.error('This browser does not support HLS.');
             }
         });
     </script>
