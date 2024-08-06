@@ -49,7 +49,8 @@
         </video>
     </div>
 
-    <script src="https://cdn.jsdelivr.net/npm/hls.js@latest"></script>
+  <!-- Include Shaka Player -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/shaka-player/4.2.0/shaka-player.compiled.js"></script>
     <script>
         function getQueryParams() {
             const params = new URLSearchParams(window.location.search);
@@ -72,50 +73,29 @@
                 document.getElementById('logo').src = params.logo;
             }
 
-            if (Hls.isSupported()) {
-                const hlsConfig = {
-                    maxBufferLength: 30, // Adjust this value to manage buffer length
-                    maxMaxBufferLength: 600, // Maximum buffer length
-                    maxBufferSize: 60 * 1000 * 1000, // Maximum buffer size in bytes
-                    maxBufferHole: 0.5, // Maximum hole in buffer allowed
-                    lowBufferWatchdogPeriod: 0.5, // Period of the buffer watchdog checking the buffer level in seconds
-                    highBufferWatchdogPeriod: 3 // Period of the buffer watchdog checking the buffer level when it is high
-                };
-                const hls = new Hls(hlsConfig);
-                hls.loadSource(videoSrc);
-                hls.attachMedia(video);
-                hls.on(Hls.Events.MANIFEST_PARSED, function() {
-                    video.play();
-                });
-                hls.on(Hls.Events.ERROR, function(event, data) {
-                    if (data.fatal) {
-                        switch (data.type) {
-                            case Hls.ErrorTypes.NETWORK_ERROR:
-                                console.error("Network error, attempting to recover...");
-                                hls.startLoad();
-                                break;
-                            case Hls.ErrorTypes.MEDIA_ERROR:
-                                console.error("Media error, attempting to recover...");
-                                hls.recoverMediaError();
-                                break;
-                            default:
-                                hls.destroy();
-                                console.error("Cannot recover from error, destroying HLS instance.");
-                                break;
-                        }
-                    }
-                });
-            } else if (video.canPlayType('application/vnd.apple.mpegurl')) {
-                video.src = videoSrc;
-                video.addEventListener('loadedmetadata', function() {
-                    video.play();
-                });
-            } else {
-                console.error('This browser does not support HLS.');
+            // Initialize Shaka Player
+            const player = new shaka.Player(video);
+
+            // Listen for error events.
+            player.addEventListener('error', onErrorEvent);
+
+            // Try to load a manifest.
+            // This is an asynchronous process.
+            player.load(videoSrc).then(function() {
+                // This runs if the asynchronous load is successful.
+                video.play();
+            }).catch(onError);  // onError is executed if the asynchronous load fails.
+
+            function onErrorEvent(event) {
+                onError(event.detail);
+            }
+
+            function onError(error) {
+                // Log the error.
+                console.error('Error code', error.code, 'object', error);
             }
         });
     </script>
-
     </br>
     </br>
     </br>
