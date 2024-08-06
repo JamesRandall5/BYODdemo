@@ -1,0 +1,90 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>TV Player</title>
+    <link rel="icon" type="image/png" href="../images/icons/tabIcon.png">
+    <link rel="stylesheet" href="../styles.css">
+    <!-- Created by James Randall for Airwave Europe Ltd. -->
+</head>
+
+    
+<body>
+    <div class="header">
+        <div class="logos">
+            <a href="https://www.nhs.uk/" target="_blank">
+                <img src="../images/logos/left-logo.png" alt="Left Logo" class="logo-left">
+            </a>
+            <a href="https://www.hospitaltv.co.uk/products/mycare-tv/" target="_blank">
+                <img src="../images/logos/right-logo.png" alt="Right Logo" class="logo-right">
+            </a>     
+        </div>
+    </div>
+
+    <div class="container" id="button-container">
+        <a href="../index.html" class="home-button">
+            <div class="home-button-content">
+                <img src="../images/icons/home.png" alt="Home Icon" class="home-button-icon">
+                <span class="home-button-text">Home</span>
+            </div>
+        </a>
+    </div>
+    
+     <div id="logo-container" style="text-align: center; margin-top: 20px;">
+        <img id="logo" src="" alt="Logo" style="max-width: 200px;">
+    </div>
+    <div id="title-container" style="text-align: center; margin-top: 10px;">
+        <h1 id="title"></h1>
+    </div>
+    <div id="video-container" style="text-align: center; margin-top: 20px;">
+        <video id="video-player" controls style="max-width: 100%;">
+            Your browser does not support the video tag.
+        </video>
+    </div>
+
+    <script>
+        function getQueryParams() {
+            const params = new URLSearchParams(window.location.search);
+            return {
+                url: params.get('url'),
+                title: params.get('title'),
+                logo: params.get('logo')
+            };
+        }
+
+        document.addEventListener('DOMContentLoaded', () => {
+            const params = getQueryParams();
+            if (params.url) {
+                document.getElementById('video-player').src = params.url;
+            }
+            if (params.title) {
+                document.getElementById('title').innerText = params.title;
+            }
+            if (params.logo) {
+                document.getElementById('logo').src = params.logo;
+            }
+        });
+    </script>
+    
+    </br>
+    </br>
+    </br>
+    </br>
+    </br>
+    </br>
+    </br>
+    </br>
+    </br>
+    </br>
+    </br>
+    </br>
+    </br>
+    
+    <div class="footer">
+        <a href="https://www.hospitaltv.co.uk/" target="_blank">
+        <img class="footer-image1" src="../images/logos/footer-image.png" alt="Footer Image">
+    </div>
+    
+</body>
+</html>
