@@ -120,6 +120,8 @@ body {
 .video-container video {
     width: 100%;
     height: auto;
+    align-items: center;
+    justify-content: center;
 }
 
 .footer {
