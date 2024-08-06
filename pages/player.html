@@ -49,8 +49,8 @@
         </video>
     </div>
 
-  <!-- Include Shaka Player -->
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/shaka-player/4.2.0/shaka-player.compiled.js"></script>
+    <script src="https://vjs.zencdn.net/7.15.4/video.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/videojs-http-streaming@latest/dist/videojs-http-streaming.min.js"></script>
     <script>
         function getQueryParams() {
             const params = new URLSearchParams(window.location.search);
@@ -73,27 +73,15 @@
                 document.getElementById('logo').src = params.logo;
             }
 
-            // Initialize Shaka Player
-            const player = new shaka.Player(video);
+            const player = videojs(video);
+            player.src({
+                src: videoSrc,
+                type: 'application/x-mpegURL'
+            });
 
-            // Listen for error events.
-            player.addEventListener('error', onErrorEvent);
-
-            // Try to load a manifest.
-            // This is an asynchronous process.
-            player.load(videoSrc).then(function() {
-                // This runs if the asynchronous load is successful.
-                video.play();
-            }).catch(onError);  // onError is executed if the asynchronous load fails.
-
-            function onErrorEvent(event) {
-                onError(event.detail);
-            }
-
-            function onError(error) {
-                // Log the error.
-                console.error('Error code', error.code, 'object', error);
-            }
+            player.ready(function() {
+                player.play();
+            });
         });
     </script>
     </br>
