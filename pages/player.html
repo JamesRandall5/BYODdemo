@@ -55,8 +55,9 @@
         </video>
     </div>
 
-    <!-- Include Clappr from CDN -->
-    <script src="https://cdn.jsdelivr.net/npm/clappr@latest/dist/clappr.min.js"></script>
+    <!-- Include Plyr and hls.js from CDN -->
+    <script src="https://cdn.plyr.io/3.6.12/plyr.polyfilled.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/hls.js@latest"></script>
     <script>
         function getQueryParams() {
             const params = new URLSearchParams(window.location.search);
@@ -69,6 +70,7 @@
 
         document.addEventListener('DOMContentLoaded', () => {
             const params = getQueryParams();
+            const video = document.getElementById('video-player');
             const videoSrc = params.url;
 
             if (params.title) {
@@ -78,11 +80,23 @@
                 document.getElementById('logo').src = params.logo;
             }
 
-            const player = new Clappr.Player({
-                source: videoSrc,
-                parentId: '#player',
-                autoPlay: true
-            });
+            if (Hls.isSupported()) {
+                const hls = new Hls();
+                hls.loadSource(videoSrc);
+                hls.attachMedia(video);
+                hls.on(Hls.Events.MANIFEST_PARSED, function() {
+                    video.play();
+                });
+            } else if (video.canPlayType('application/vnd.apple.mpegurl')) {
+                video.src = videoSrc;
+                video.addEventListener('loadedmetadata', function() {
+                    video.play();
+                });
+            } else {
+                console.error('This browser does not support HLS.');
+            }
+
+            const player = new Plyr(video);
         });
     </script>
     </br>
