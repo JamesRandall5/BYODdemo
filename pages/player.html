@@ -55,8 +55,7 @@
         </video>
     </div>
 
-    <!-- Include Plyr and hls.js from CDN -->
-    <script src="https://cdn.plyr.io/3.6.12/plyr.polyfilled.js"></script>
+   <!-- Include hls.js from CDN -->
     <script src="https://cdn.jsdelivr.net/npm/hls.js@latest"></script>
     <script>
         function getQueryParams() {
@@ -95,10 +94,9 @@
             } else {
                 console.error('This browser does not support HLS.');
             }
-
-            const player = new Plyr(video);
         });
     </script>
+    
     </br>
     </br>
     </br>
