@@ -79,7 +79,7 @@ body {
     font-weight: bold;
     width: 150px; /* Custom width */
     height: 50px; /* Custom height */
-    margin-left: 10px;
+    margin-left: 20px;
 }
 
 .ch-button-content {
@@ -140,7 +140,7 @@ body {
 
 .video-container {
     position: relative;
-    width: 80%;
+    width: 100%;
     max-width: 1920px;
     margin: 0 auto; /* Center the container horizontally */
     display: flex; /* Add flexbox for centering the content */
@@ -151,11 +151,6 @@ body {
 .video-container video {
     width: 100%;
     height: auto;
-}
-
-.wrapper {
-    background-color: white; /* White background inside the wrapper */
-    min-height: 100vh; /* Ensure it covers the full height of the screen */
 }
 
 .footer {
