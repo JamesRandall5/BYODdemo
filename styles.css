@@ -66,6 +66,35 @@ body {
     margin-bottom: 2px;
 }
 
+.ch-button {
+    display: inline-flex; /* Use inline-flex for better alignment */
+    align-items: center;
+    justify-content: flex-start; /* Align content to the left */
+    margin-top: 20px;
+    background-color: #004E98; /* Dark blue button */
+    color: white;
+    text-decoration: none;
+    border-radius: 5px;
+    font-size: 18px;
+    font-weight: bold;
+    width: 150px; /* Custom width */
+    height: 50px; /* Custom height */
+    margin-left: 10px;
+}
+
+.ch-button-content {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 100%;
+}
+
+.ch-button-icon {
+    max-height: 100%; /* Ensure the icon fits within the button */
+    margin-right: 5px; /* Space between icon and text */
+    margin-bottom: 2px;
+}
+
 .button {
     display: block;
     margin: 20px auto;
