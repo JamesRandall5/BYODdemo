@@ -124,6 +124,11 @@ body {
     height: auto;
 }
 
+.wrapper {
+    background-color: white; /* White background inside the wrapper */
+    min-height: 100vh; /* Ensure it covers the full height of the screen */
+}
+
 .footer {
     display: block; /* Display the footer */
     background-color: white; /* White background color for the footer */
