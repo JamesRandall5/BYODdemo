@@ -17,116 +17,112 @@
 
     
 <body>
-        <div class="header">
-            <div class="logos">
-                <a href="https://www.nhs.uk/" target="_blank">
-                    <img src="../images/logos/left-logo.png" alt="Left Logo" class="logo-left">
-                </a>
-                <a href="https://www.hospitaltv.co.uk/products/mycare-tv/" target="_blank">
-                    <img src="../images/logos/right-logo.png" alt="Right Logo" class="logo-right">
-                </a>     
+    <div class="header">
+        <div class="logos">
+            <a href="https://www.nhs.uk/" target="_blank">
+                <img src="../images/logos/left-logo.png" alt="Left Logo" class="logo-left">
+            </a>
+            <a href="https://www.hospitaltv.co.uk/products/mycare-tv/" target="_blank">
+                <img src="../images/logos/right-logo.png" alt="Right Logo" class="logo-right">
+            </a>     
+        </div>
+    </div>
+
+    <div class="container" id="button-container">
+        <a href="../index.html" class="home-button">
+            <div class="home-button-content">
+                <img src="../images/icons/home.png" alt="Home Icon" class="home-button-icon">
+                <span class="home-button-text">Home</span>
             </div>
-        </div>
+        </a>
+        <a href="WatchTV.html" class="home-button">
+            <div class="home-button-content">
+                <img src="../images/icons/home.png" alt="Home Icon" class="home-button-icon">
+                <span class="home-button-text">Ch. List</span>
+            </div>
+        </a>
+    </div>
     
-        <div class="container" id="button-container">
-            <a href="../index.html" class="home-button">
-                <div class="home-button-content">
-                    <img src="../images/icons/home.png" alt="Home Icon" class="home-button-icon">
-                    <span class="home-button-text">Home</span>
-                </div>
-            </a>
-            <a href="WatchTV.html" class="home-button">
-                <div class="home-button-content">
-                    <img src="../images/icons/home.png" alt="Home Icon" class="home-button-icon">
-                    <span class="home-button-text">Ch. List</span>
-                </div>
-            </a>
-        </div>
-        
-         <div id="logo-container" style="text-align: center; margin-top: 20px;">
-            <img id="logo" src="" alt="Logo" style="max-width: 200px;">
-        </div>
-        <div id="title-container" style="text-align: center; margin-top: 10px;">
-            <h1 id="title"></h1>
-        </div>
-        <div id="video-container" style="text-align: center; margin-top: 20px;">
-            <video id="video-player" controls style="max-width: 100%;">
-                Your browser does not support the video tag.
-            </video>
-        </div>
-    
-        <!-- Include hls.js -->
-        <script src="https://cdn.jsdelivr.net/npm/hls.js@latest"></script>
-        <script>
-            function getQueryParams() {
-                const params = new URLSearchParams(window.location.search);
-                return {
-                    url: params.get('url'),
-                    title: params.get('title'),
-                    logo: params.get('logo')
-                };
+     <div id="logo-container" style="text-align: center; margin-top: 20px;">
+        <img id="logo" src="" alt="Logo" style="max-width: 200px;">
+    </div>
+    <div id="title-container" style="text-align: center; margin-top: 10px;">
+        <h1 id="title"></h1>
+    </div>
+    <div id="video-container" style="text-align: center; margin-top: 20px;">
+        <video id="video-player" controls style="max-width: 100%;">
+            Your browser does not support the video tag.
+        </video>
+    </div>
+
+    <!-- Include hls.js -->
+    <script src="https://cdn.jsdelivr.net/npm/hls.js@latest"></script>
+    <script>
+        function getQueryParams() {
+            const params = new URLSearchParams(window.location.search);
+            return {
+                url: params.get('url'),
+                title: params.get('title'),
+                logo: params.get('logo')
+            };
+        }
+
+        function isSafari() {
+            return /^((?!chrome|android).)*safari/i.test(navigator.userAgent);
+        }
+
+        function isMobile() {
+            return /iPhone|iPad|iPod|Android/i.test(navigator.userAgent);
+        }
+
+        document.addEventListener('DOMContentLoaded', () => {
+            const params = getQueryParams();
+            const video = document.getElementById('video-player');
+            const videoSrc = params.url;
+
+            if (params.title) {
+                document.getElementById('title').innerText = params.title;
             }
-    
-            function isSafari() {
-                return /^((?!chrome|android).)*safari/i.test(navigator.userAgent);
+            if (params.logo) {
+                document.getElementById('logo').src = params.logo;
             }
-    
-            function isMobile() {
-                return /iPhone|iPad|iPod|Android/i.test(navigator.userAgent);
-            }
-    
-            document.addEventListener('DOMContentLoaded', () => {
-                const params = getQueryParams();
-                const video = document.getElementById('video-player');
-                const videoSrc = params.url;
-    
-                if (params.title) {
-                    document.getElementById('title').innerText = params.title;
-                }
-                if (params.logo) {
-                    document.getElementById('logo').src = params.logo;
-                }
-    
-                // Check if the browser is Safari or a mobile device
-                if (isSafari() || isMobile()) {
-                    // Use native HLS playback for Safari or mobile devices
+
+            // Check if the browser is Safari or a mobile device
+            if (isSafari() || isMobile()) {
+                // Use native HLS playback for Safari or mobile devices
+                video.src = videoSrc;
+                video.addEventListener('loadedmetadata', function() {
+                    video.play();
+                });
+            } else {
+                // Use hls.js for other browsers
+                if (Hls.isSupported()) {
+                    const hls = new Hls();
+                    hls.loadSource(videoSrc);
+                    hls.attachMedia(video);
+                    hls.on(Hls.Events.MANIFEST_PARSED, function() {
+                        video.play();
+                    });
+                } else if (video.canPlayType('application/vnd.apple.mpegurl')) {
+                    // Fallback for devices that support HLS natively
                     video.src = videoSrc;
                     video.addEventListener('loadedmetadata', function() {
                         video.play();
                     });
                 } else {
-                    // Use hls.js for other browsers
-                    if (Hls.isSupported()) {
-                        const hls = new Hls();
-                        hls.loadSource(videoSrc);
-                        hls.attachMedia(video);
-                        hls.on(Hls.Events.MANIFEST_PARSED, function() {
-                            video.play();
-                        });
-                    } else if (video.canPlayType('application/vnd.apple.mpegurl')) {
-                        // Fallback for devices that support HLS natively
-                        video.src = videoSrc;
-                        video.addEventListener('loadedmetadata', function() {
-                            video.play();
-                        });
-                    } else {
-                        console.error('This browser does not support HLS.');
-                    }
+                    console.error('This browser does not support HLS.');
                 }
-            });
-        </script>
+            }
+        });
+    </script>
+
+    </br>
+    </br>
+    </br>
     
-        </br>
-        </br>
-        </br>
-        
-        <div class="footer">
-            <a href="https://www.hospitaltv.co.uk/" target="_blank">
-            <img class="footer-image1" src="../images/logos/footer-image.png" alt="Footer Image">
-        </div>
-</body>
     <div class="footer">
         <a href="https://www.hospitaltv.co.uk/" target="_blank">
         <img class="footer-image1" src="../images/logos/footer-image.png" alt="Footer Image">
-    </div>  
+    </div>
+</body>
 </html>
