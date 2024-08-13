@@ -55,7 +55,7 @@
         </video>
     </div>
 
-   <!-- Include hls.js from CDN -->
+    <!-- Include hls.js -->
     <script src="https://cdn.jsdelivr.net/npm/hls.js@latest"></script>
     <script>
         function getQueryParams() {
@@ -65,6 +65,14 @@
                 title: params.get('title'),
                 logo: params.get('logo')
             };
+        }
+
+        function isSafari() {
+            return /^((?!chrome|android).)*safari/i.test(navigator.userAgent);
+        }
+
+        function isMobile() {
+            return /iPhone|iPad|iPod|Android/i.test(navigator.userAgent);
         }
 
         document.addEventListener('DOMContentLoaded', () => {
@@ -79,20 +87,31 @@
                 document.getElementById('logo').src = params.logo;
             }
 
-            if (Hls.isSupported()) {
-                const hls = new Hls();
-                hls.loadSource(videoSrc);
-                hls.attachMedia(video);
-                hls.on(Hls.Events.MANIFEST_PARSED, function() {
-                    video.play();
-                });
-            } else if (video.canPlayType('application/vnd.apple.mpegurl')) {
+            // Check if the browser is Safari or a mobile device
+            if (isSafari() || isMobile()) {
+                // Use native HLS playback for Safari or mobile devices
                 video.src = videoSrc;
                 video.addEventListener('loadedmetadata', function() {
                     video.play();
                 });
             } else {
-                console.error('This browser does not support HLS.');
+                // Use hls.js for other browsers
+                if (Hls.isSupported()) {
+                    const hls = new Hls();
+                    hls.loadSource(videoSrc);
+                    hls.attachMedia(video);
+                    hls.on(Hls.Events.MANIFEST_PARSED, function() {
+                        video.play();
+                    });
+                } else if (video.canPlayType('application/vnd.apple.mpegurl')) {
+                    // Fallback for devices that support HLS natively
+                    video.src = videoSrc;
+                    video.addEventListener('loadedmetadata', function() {
+                        video.play();
+                    });
+                } else {
+                    console.error('This browser does not support HLS.');
+                }
             }
         });
     </script>
