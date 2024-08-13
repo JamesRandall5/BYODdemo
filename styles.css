@@ -156,7 +156,7 @@ body {
 .footer {
     display: block; /* Display the footer */
     background-color: white; /* White background color for the footer */
-    padding: 20px;
+    padding: 10px;
     text-align: center;
     width: 100%; /* Ensure the footer spans the entire width */
     z-index: 3; /* Ensure footer appears above other content */
@@ -165,6 +165,5 @@ body {
 .footer-image1 {
     max-width: 100%; /* Fit the width within the screen */
     height: auto; /* Maintain aspect ratio */
-    padding: 20px; /* Add padding to the footer image */
     box-sizing: border-box; /* Include padding in the width calculation */
 }
