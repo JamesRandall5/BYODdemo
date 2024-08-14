@@ -9,6 +9,15 @@
     <!-- Created by James Randall for Airwave Europe Ltd. -->
 </head>
 <body>
+    
+    <script>
+        function playVideo(event, url, title, logo) {
+            event.preventDefault();
+            const videoPlayerUrl = `playerRADIO.html?url=${encodeURIComponent(url)}&title=${encodeURIComponent(title)}&logo=${encodeURIComponent(logo)}`;
+            window.location.href = videoPlayerUrl;
+        }
+    </script>
+  
     <div class="header">
         <div class="logos">
             <a href="https://www.nhs.uk/">
@@ -29,7 +38,7 @@
             </div>
         </a>
         <!-- Button 1 -->
-        <a href="https://dobby.aweline.co.uk/rowharderupthestream/8016/playlist.m3u8" class="button">
+        <a href="#" class="button" onclick="playVideo(event, 'https://dobby.aweline.co.uk/rowharderupthestream/8016/playlist.m3u8', 'BBC Radio 1', '../images/icons/bbcR1.png')">
             <div class="button-content">
                 <div class="button-text">
                     <span class="description">Listen to</span>
@@ -41,7 +50,7 @@
             </div>
         </a>
         <!-- Button 2 -->
-        <a href="https://dobby.aweline.co.uk/rowharderupthestream/8025/playlist.m3u8" class="button">
+        <a href="#" class="button" onclick="playVideo(event, 'https://dobby.aweline.co.uk/rowharderupthestream/8025/playlist.m3u8', 'Capital Radio', '../images/icons/capital.png')">
             <div class="button-content">
                 <div class="button-text">
                     <span class="description">Listen to</span>
@@ -53,7 +62,7 @@
             </div>
         </a>
         <!-- Button 3 -->
-        <a href="https://dobby.aweline.co.uk/rowharderupthestream/8024/playlist.m3u8" class="button">
+        <a href="#" class="button" onclick="playVideo(event, 'https://dobby.aweline.co.uk/rowharderupthestream/8024/playlist.m3u8', 'Heart Radio', '../images/icons/heart.png')">
             <div class="button-content">
                 <div class="button-text">
                     <span class="description">Listen to</span>
@@ -65,7 +74,7 @@
             </div>
         </a>
         <!-- Button 4 -->
-        <a href="https://dobby.aweline.co.uk/rowharderupthestream/8017/playlist.m3u8" class="button">
+        <a href="#" class="button" onclick="playVideo(event, 'https://dobby.aweline.co.uk/rowharderupthestream/8017/playlist.m3u8', 'BBC Radio 2', '../images/icons/bbcR2.png')">
             <div class="button-content">
                 <div class="button-text">
                     <span class="description">Listen to</span>
@@ -77,7 +86,7 @@
             </div>
         </a>
         <!-- Button 5 -->
-        <a href="https://dobby.aweline.co.uk/rowharderupthestream/8020/playlist.m3u8" class="button">
+        <a href="#" class="button" onclick="playVideo(event, 'https://dobby.aweline.co.uk/rowharderupthestream/8020/playlist.m3u8', 'BBC Radio 3', '../images/icons/bbcR3.png')">
             <div class="button-content">
                 <div class="button-text">
                     <span class="description">Listen to</span>
@@ -89,7 +98,7 @@
             </div>
         </a>
         <!-- Button 6 -->
-        <a href="https://dobby.aweline.co.uk/rowharderupthestream/8021/playlist.m3u8" class="button">
+        <a href="#" class="button" onclick="playVideo(event, 'https://dobby.aweline.co.uk/rowharderupthestream/8021/playlist.m3u8', 'BBC Radio 4', '../images/icons/bbcR4.png')">
             <div class="button-content">
                 <div class="button-text">
                     <span class="description">Listen to</span>
@@ -101,7 +110,7 @@
             </div>
         </a>
         <!-- Button 7 -->
-        <a href="https://dobby.aweline.co.uk/rowharderupthestream/8022/playlist.m3u8" class="button">
+        <a href="#" class="button" onclick="playVideo(event, 'https://dobby.aweline.co.uk/rowharderupthestream/8022/playlist.m3u8', 'BBC Radio 5 Live', '../images/icons/bbcR5L.png')">
             <div class="button-content">
                 <div class="button-text">
                     <span class="description">Listen to</span>
@@ -113,7 +122,7 @@
             </div>
         </a>
         <!-- Button 7 -->
-        <a href="https://dobby.aweline.co.uk/rowharderupthestream/8023/playlist.m3u8" class="button">
+        <a href="#" class="button" onclick="playVideo(event, 'https://dobby.aweline.co.uk/rowharderupthestream/8023/playlist.m3u8', 'BBC Radio 6 Music', '../images/icons/bbcR6M.png')">
             <div class="button-content">
                 <div class="button-text">
                     <span class="description">Listen to</span>
