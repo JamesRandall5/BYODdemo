@@ -9,6 +9,15 @@
     <!-- Created by James Randall for Airwave Europe Ltd. -->
 </head>
 <body>
+
+    <script>
+        function playVideo(event, url, title, logo) {
+            event.preventDefault();
+            const videoPlayerUrl = `playerSUBS.html?url=${encodeURIComponent(url)}&title=${encodeURIComponent(title)}&logo=${encodeURIComponent(logo)}`;
+            window.location.href = videoPlayerUrl;
+        }
+    </script>
+    
     <div class="header">
         <div class="logos">
             <a href="https://www.nhs.uk/">
@@ -29,7 +38,7 @@
             </div>
         </a>
         <!-- Button 1 -->
-        <a href="https://dobby.aweline.co.uk/rowharderupthestream/8030/playlist.m3u8" class="button">
+        <a href="#" class="button" onclick="playVideo(event, 'https://dobby.aweline.co.uk/rowharderupthestream/8030/playlist.m3u8', 'BBC One', '../images/icons/bbc1.png')">
             <div class="button-content">
                 <div class="button-text">
                     <span class="description">Watch</span>
@@ -41,7 +50,7 @@
             </div>
         </a>
         <!-- Button 2 -->
-        <a href="https://dobby.aweline.co.uk/rowharderupthestream/8029/playlist.m3u8" class="button">
+        <a href="#" class="button" onclick="playVideo(event, 'https://dobby.aweline.co.uk/rowharderupthestream/8029/playlist.m3u8', 'BBC Two', '../images/icons/bbc2.png')">
             <div class="button-content">
                 <div class="button-text">
                     <span class="description">Watch</span>
@@ -53,7 +62,7 @@
             </div>
         </a>
         <!-- Button 3 -->
-        <a href="https://dobby.aweline.co.uk/rowharderupthestream/8028/playlist.m3u8" class="button">
+        <a href="#" class="button" onclick="playVideo(event, 'https://dobby.aweline.co.uk/rowharderupthestream/8028/playlist.m3u8', 'ITV', '../images/icons/itv.png')">
             <div class="button-content">
                 <div class="button-text">
                     <span class="description">Watch</span>
@@ -65,7 +74,7 @@
             </div>
         </a>
         <!-- Button 4 -->
-        <a href="https://dobby.aweline.co.uk/rowharderupthestream/8027/playlist.m3u8" class="button">
+        <a href="#" class="button" onclick="playVideo(event, 'https://dobby.aweline.co.uk/rowharderupthestream/8027/playlist.m3u8', 'Channel 4', '../images/icons/ch4.png')">
             <div class="button-content">
                 <div class="button-text">
                     <span class="description">Watch</span>
@@ -77,7 +86,7 @@
             </div>
         </a>
         <!-- Button 5 -->
-        <a href="https://dobby.aweline.co.uk/rowharderupthestream/8026/playlist.m3u8" class="button">
+        <a href="#" class="button" onclick="playVideo(event, 'https://dobby.aweline.co.uk/rowharderupthestream/8026/playlist.m3u8', 'Channel 5', '../images/icons/ch5.png')">
             <div class="button-content">
                 <div class="button-text">
                     <span class="description">Watch</span>
