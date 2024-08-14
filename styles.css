@@ -148,19 +148,25 @@ body {
     justify-content: center; /* Center items horizontally */
 }
 
-.video-container-chapel {
-    position: relative;
-    width: 100%;
-    max-width: 1920px;
-    margin: 0 10px; /* Center the container horizontally */
-    display: flex; /* Add flexbox for centering the content */
-    align-items: center; /* Center items vertically if necessary */
-    justify-content: center; /* Center items horizontally */
-}
-
 .video-container video {
     width: 80%;
     height: auto;
+}
+
+.video-container-chapel {
+    position: relative;
+    width: calc(100% - 20px); /* 100% width minus 10px on each side */
+    max-width: 1920px; /* Max width for large screens */
+    margin: 0 auto; /* Center the container horizontally */
+    display: flex; /* Use flexbox for centering */
+    align-items: center; /* Center items vertically if necessary */
+    justify-content: center; /* Center items horizontally */
+    padding: 0 10px; /* Add 10px padding on the left and right */
+}
+
+.video-container-chapel video {
+    width: 100%; /* Ensure the video takes up the full width of the container */
+    height: auto; /* Maintain aspect ratio */
 }
 
 .footer {
