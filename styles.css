@@ -148,6 +148,16 @@ body {
     justify-content: center; /* Center items horizontally */
 }
 
+.video-container-chapel {
+    position: relative;
+    width: 100%;
+    max-width: 1920px;
+    margin: 0 10px; /* Center the container horizontally */
+    display: flex; /* Add flexbox for centering the content */
+    align-items: center; /* Center items vertically if necessary */
+    justify-content: center; /* Center items horizontally */
+}
+
 .video-container video {
     width: 80%;
     height: auto;
