@@ -140,16 +140,16 @@ body {
 
 .video-container {
     position: relative;
-    width: 100%;
+    width: 80%;
     max-width: 1920px;
-    margin: 0 10px; /* Center the container horizontally */
+    margin: 0 10px 0 10px; /* Center the container horizontally */
     display: flex; /* Add flexbox for centering the content */
     align-items: center; /* Center items vertically if necessary */
     justify-content: center; /* Center items horizontally */
 }
 
 .video-container video {
-    width: 100%;
+    width: 80%;
     height: auto;
 }
 
