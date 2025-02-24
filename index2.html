@@ -47,33 +47,39 @@
         </a>
 
         <!-- Button 3 -->
-        <a class="button" onclick='onclick=onclick='radix.doCommand(JSON.stringify({"command": {"@class":
-          "com.viso.entities.commands.CommandRemoteExec",
-          "remoteExecItem": {
-          "@class": "com.viso.entities.RemoteExecItem",
-           "repositoryItemName": "Start App",
-           "isReadOnly": false,
-           "privateRepoItem": false,
-           "command": "monkey",
-           "args": ["-p", "com.google.android.youtube", "1"],
-           "authority": "AUTHORITY_SYSTEM",
-           "waitForExit": true,
-           "collectOutput": true,
-           "props": {
-             "args": "-p com.google.android.youtube -c android.intent.category.LAUNCHER 1 || monkey -p com.google.android.youtube -c android.intent.category.LEANBACK_LAUNCHER 1",
-           "usedCommandStart": true,
-            "package": "com.google.android.youtube"
-            }}}}))'>
-            <div class="button-content">
-                <div class="button-text">
-                    <span class="description"></span>
-                    <span class="title">Launch YT</span>
-                </div>
-                <div class="button-icon">
-                    <img src="images/icons/subs.png" alt="Icon">
-                </div>
-            </div>
-        </a>
+      <a class="button" onclick='radix.doCommand(JSON.stringify({
+        "command": {
+            "@class": "com.viso.entities.commands.CommandRemoteExec",
+            "remoteExecItem": {
+                "@class": "com.viso.entities.RemoteExecItem",
+                "repositoryItemName": "Start App",
+                "isReadOnly": false,
+                "privateRepoItem": false,
+                "command": "monkey",
+                "args": ["-p", "com.google.android.youtube", "1"],
+                "authority": "AUTHORITY_SYSTEM",
+                "waitForExit": true,
+                "collectOutput": true,
+                "props": {
+                    "args": "-p com.google.android.youtube -c android.intent.category.LAUNCHER 1 || monkey -p com.google.android.youtube -c android.intent.category.LEANBACK_LAUNCHER 1",
+                    "usedCommandStart": true,
+                    "package": "com.google.android.youtube"
+                }
+            }
+        }
+    }))'>
+    <div class="button-content">
+        <div class="button-text">
+            <span class="description"></span>
+            <span class="title">Launch YT</span>
+        </div>
+        <div class="button-icon">
+            <img src="images/icons/subs.png" alt="Icon">
+        </div>
+    </div>
+</a>
+
+
         <!-- End of buttons -->
     </div>
 
