@@ -122,8 +122,9 @@
 
         function launchApp(packageName) {
             logToConsole(`🚀 Launching App: ${packageName}`);
+        
             try {
-                radix.doCommand(JSON.stringify({
+                let payload = {
                     "command": {
                         "@class": "com.viso.entities.commands.CommandRemoteExec",
                         "remoteExecItem": {
@@ -141,7 +142,14 @@
                             }
                         }
                     }
-                }));
+                };
+        
+                logToConsole("📡 Sending command to Radix...");
+        
+                radix.doCommand(JSON.stringify(payload), function(response) {
+                    logToConsole(`✅ Radix Response: ${JSON.stringify(response)}`);
+                });
+        
             } catch (error) {
                 logToConsole("❌ ERROR: " + error.message);
             }
