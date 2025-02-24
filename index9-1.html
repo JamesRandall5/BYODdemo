@@ -1,0 +1,151 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Radix Test</title>
+    <link rel="icon" type="image/png" href="images/icons/tabIcon.png">
+    <link rel="stylesheet" href="styles.css">
+    <!-- Created by James Randall for Airwave Europe Ltd. -->
+</head>
+<body>
+    <div class="header">
+        <div class="logos">
+            <a href="https://www.nhs.uk/" target="_blank">
+                <img src="images/logos/left-logo.png" alt="Left Logo" class="logo-left">
+            </a>
+            <a href="https://www.hospitaltv.co.uk/products/mycare-tv/" target="_blank">
+                <img src="images/logos/right-logo.png" alt="Right Logo" class="logo-right">
+            </a>     
+        </div>
+    </div>
+
+    <div class="container" id="button-container">
+        <!-- Button 1: Volume Up -->
+        <a class="button" onclick="volumeUp()">
+            <div class="button-content">
+                <div class="button-text">
+                    <span class="title">Volume Up</span>
+                </div>
+                <div class="button-icon">
+                    <img src="images/icons/tv.png" alt="Icon">
+                </div>
+            </div>
+        </a>
+
+        <!-- Button 2: Volume Down -->
+        <a class="button" onclick="volumeDown()">
+            <div class="button-content">
+                <div class="button-text">
+                    <span class="title">Volume Down</span>
+                </div>
+                <div class="button-icon">
+                    <img src="images/icons/subs.png" alt="Icon">
+                </div>
+            </div>
+        </a>
+
+        <!-- Button 3: Launch YouTube -->
+        <a class="button" onclick="launchApp('com.google.android.youtube')">
+            <div class="button-content">
+                <div class="button-text">
+                    <span class="title">Launch YouTube</span>
+                </div>
+                <div class="button-icon">
+                    <img src="images/icons/subs.png" alt="Icon">
+                </div>
+            </div>
+        </a>
+    </div>
+
+    <!-- ✅ Debug Console -->
+    <div id="debug-console" style="
+        background: #000;
+        color: #0f0;
+        font-family: monospace;
+        padding: 10px;
+        height: 200px;
+        overflow-y: auto;
+        border: 1px solid #0f0;
+        margin-top: 20px;">
+        <strong>Debug Console:</strong>
+        <pre id="console-output"></pre>
+    </div>
+
+    <div class="footer">
+        <a href="https://www.hospitaltv.co.uk/" target="_blank">
+        <img class="footer-image1" src="images/logos/footer-image.png" alt="Footer Image">
+    </div>
+
+    <script>
+        function logToConsole(message) {
+            let consoleOutput = document.getElementById('console-output');
+            consoleOutput.innerHTML += message + "\n";
+            consoleOutput.parentElement.scrollTop = consoleOutput.parentElement.scrollHeight;
+        }
+
+        function volumeUp() {
+            logToConsole("🔊 Volume Up Command Sent");
+            radix.doCommand(JSON.stringify({
+                "command": {
+                    "@class": "com.viso.entities.commands.CommandRemoteExec",
+                    "remoteExecItem": {
+                        "@class": "com.viso.entities.RemoteExecItem",
+                        "command": "!internal",
+                        "args": ["input_keyevent", "10", "0", "24"],
+                        "authority": "AUTHORITY_SYSTEM",
+                        "waitForExit": true,
+                        "collectOutput": true,
+                        "repositoryItemName": "Volume Up"
+                    }
+                }
+            }));
+        }
+
+        function volumeDown() {
+            logToConsole("🔉 Volume Down Command Sent");
+            radix.doCommand(JSON.stringify({
+                "command": {
+                    "@class": "com.viso.entities.commands.CommandRemoteExec",
+                    "remoteExecItem": {
+                        "@class": "com.viso.entities.RemoteExecItem",
+                        "command": "!internal",
+                        "args": ["input_keyevent", "10", "0", "25"],
+                        "authority": "AUTHORITY_SYSTEM",
+                        "waitForExit": true,
+                        "collectOutput": true,
+                        "repositoryItemName": "Volume Down"
+                    }
+                }
+            }));
+        }
+
+        function launchApp(packageName) {
+            logToConsole(`🚀 Launching App: ${packageName}`);
+            try {
+                radix.doCommand(JSON.stringify({
+                    "command": {
+                        "@class": "com.viso.entities.commands.CommandRemoteExec",
+                        "remoteExecItem": {
+                            "@class": "com.viso.entities.RemoteExecItem",
+                            "repositoryItemName": "Start App",
+                            "command": "monkey",
+                            "args": ["-p", packageName, "1"],
+                            "authority": "AUTHORITY_SYSTEM",
+                            "waitForExit": true,
+                            "collectOutput": true,
+                            "props": {
+                                "args": `-p ${packageName} -c android.intent.category.LAUNCHER 1 || monkey -p ${packageName} -c android.intent.category.LEANBACK_LAUNCHER 1`,
+                                "usedCommandStart": true,
+                                "package": packageName
+                            }
+                        }
+                    }
+                }));
+            } catch (error) {
+                logToConsole("❌ ERROR: " + error.message);
+            }
+        }
+    </script>
+</body>
+</html>
