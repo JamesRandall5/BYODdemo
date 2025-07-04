@@ -87,23 +87,23 @@
 
       function setupHls() {
         const hls = new Hls({
-          // much shorter preload buffer
-          maxBufferLength:          5,    // only buffer up to 5 seconds ahead
-          backBufferLength:         3,    // keep 3 seconds behind playhead
-          maxBufferHole:            0.5,  // tolerate half-second gap
-          liveSyncDurationCount:    1,    // stay ~1 segment behind live
-          // manifest retry settings
-          manifestLoadingMaxRetry:  6,
-          manifestLoadingRetryDelay:1000,
-          manifestLoadingTimeOut:   10000,
-          // prevent caching of playlists
+          // start at live edge
+          startPosition:              -1,
+          maxBufferLength:            90,
+          backBufferLength:           30,
+          maxBufferHole:              0.5,
+          liveSyncDurationCount:      3,
+          liveMaxLatencyDurationCount: 5,
+          manifestLoadingMaxRetry:    6,
+          manifestLoadingRetryDelay:  1000,
+          manifestLoadingTimeOut:     10000,
           xhrSetup: (xhr) => {
             xhr.setRequestHeader('Cache-Control', 'no-cache');
             xhr.setRequestHeader('Pragma', 'no-cache');
           }
         });
 
-        // cache-busting on each playlist fetch
+        // cache-buster on each playlist fetch
         hls.on(Hls.Events.MANIFEST_LOADING, (_evt, data) => {
           const base = data.url.split('?')[0];
           data.url = base + '?r=' + Date.now();
@@ -113,29 +113,21 @@
 
         hls.on(Hls.Events.MEDIA_ATTACHED, () => {
           hls.loadSource(url);
+          // explicitly start loading from live edge
+          hls.startLoad(-1);
         });
 
         hls.on(Hls.Events.MANIFEST_PARSED, () => {
-          hls.nextLevel = 0; // start at lowest quality to fill buffer faster
           video.play().catch(e => console.error('Play error:', e));
         });
 
         hls.on(Hls.Events.ERROR, (_evt, data) => {
           console.error('HLS error:', data);
-          // network error → resume loading
           if (data.type === Hls.ErrorTypes.NETWORK_ERROR) {
             hls.startLoad();
-          }
-          // media error (e.g. this bad .ts segment) → skip it
-          else if (data.type === Hls.ErrorTypes.MEDIA_ERROR) {
-            console.warn('Media error – recovering and skipping ahead');
+          } else if (data.type === Hls.ErrorTypes.MEDIA_ERROR) {
             hls.recoverMediaError();
-            // nudge playhead forward to skip the faulty fragment
-            const safeTime = (video.currentTime || 0) + 1;
-            video.currentTime = safeTime;
-          }
-          // other fatal errors → destroy
-          else if (data.fatal) {
+          } else if (data.fatal) {
             hls.destroy();
           }
         });
@@ -143,13 +135,11 @@
 
       // determine playback path
       if (isSafari() || isMobile()) {
-        // native HLS
         video.src = url;
         video.addEventListener('loadedmetadata', () => video.play());
       } else if (Hls.isSupported()) {
         setupHls();
       } else if (video.canPlayType('application/vnd.apple.mpegurl')) {
-        // fallback native HLS
         video.src = url;
         video.addEventListener('loadedmetadata', () => video.play());
       } else {
