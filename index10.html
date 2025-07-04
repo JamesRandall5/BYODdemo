@@ -7,128 +7,191 @@
   <link rel="icon" type="image/png" href="images/icons/tabIcon.png">
   <!-- Embedded styles -->
   <style>
-  :root {
-    --primary:    #005EB8;
-    --background: #F4F4F4;
-    --text:       #333;
-    --white:      #fff;
-    --footer-bg:  #222;
-    --transition: all 0.3s ease;
-  }
+    :root {
+      --primary:    #005EB8;
+      --background: #F4F4F4;
+      --text:       #333;
+      --white:      #fff;
+      --footer-bg:  #222;
+      --transition: all 0.3s ease;
+    }
 
-  /* Reset & Layout */
-  * {
-    box-sizing: border-box;
-    margin: 0;
-    padding: 0;
-  }
-  html, body {
-    height: 100%;
-    font-family: 'Segoe UI', sans-serif;
-    background: var(--background);
-  }
-  body {
-    display: flex;
-    flex-direction: column;
-  }
+    /* Reset & Layout */
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    html, body { height: 100%; font-family: 'Segoe UI', sans-serif; background: var(--background); }
+    body { display: flex; flex-direction: column; }
 
-  /* Header */
-  .header {
-    background: var(--primary);
-    padding: 20px;
-  }
-  .logos {
-    max-width: 1200px;
-    margin: 0 auto;
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-  }
-  .logo-left,
-  .logo-right {
-    max-height: 60px;
-    opacity: 0;
-    animation: slideIn 0.6s ease forwards;
-  }
-  .logo-right {
-    animation-delay: 0.2s;
-  }
-  @keyframes slideIn {
-    from { opacity: 0; transform: translateY(-20px); }
-    to   { opacity: 1; transform: translateY(0); }
-  }
+    /* Header */
+    .header { background: var(--primary); padding: 20px; }
+    .logos { max-width: 1200px; margin: 0 auto; display: flex; justify-content: space-between; align-items: center; }
+    .logo-left, .logo-right { max-height: 60px; opacity: 0; animation: slideIn 0.6s ease forwards; }
+    .logo-right { animation-delay: 0.2s; }
+    @keyframes slideIn { from { opacity: 0; transform: translateY(-20px); } to { opacity: 1; transform: translateY(0); } }
 
-  /* Main Buttons */
-  .container {
-    flex: 1;
-    max-width: 1200px;
-    margin: 20px auto;
-    display: grid;
-    gap: 20px;
-    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
-    padding: 0 20px;
-  }
-  .button {
-    background: var(--white);
-    border-radius: 12px;
-    overflow: hidden;
-    text-decoration: none;
-    color: var(--text);
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-    padding: 15px;
-    box-shadow: 0 2px 8px rgba(0,0,0,0.1);
-    transform: translateY(20px);
-    opacity: 0;
-    animation: fadeInUp 0.5s ease forwards;
-    animation-delay: calc(var(--i) * 0.1s);
-    transition: var(--transition);
-  }
-  .button:hover {
-    transform: scale(1.05);
-    box-shadow: 0 4px 12px rgba(0,0,0,0.15);
-  }
-  @keyframes fadeInUp {
-    from { opacity: 0; transform: translateY(20px); }
-    to   { opacity: 1; transform: translateY(0); }
-  }
-  #button-container .button:nth-child(1) { --i: 0; }
-  #button-container .button:nth-child(2) { --i: 1; }
-  #button-container .button:nth-child(3) { --i: 2; }
-  #button-container .button:nth-child(4) { --i: 3; }
-  /* Continue up to nth-child(13) for all buttons */
+    /* Main Buttons */
+    .container { flex: 1; max-width: 1200px; margin: 20px auto; display: grid; gap: 20px; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); padding: 0 20px; }
+    .button { background: var(--white); border-radius: 12px; overflow: hidden; text-decoration: none; color: var(--text);
+               display: flex; align-items: center; justify-content: space-between; padding: 15px;
+               box-shadow: 0 2px 8px rgba(0,0,0,0.1); transform: translateY(20px); opacity: 0;
+               animation: fadeInUp 0.5s ease forwards; animation-delay: calc(var(--i) * 0.1s);
+               transition: var(--transition);
+    }
+    .button:hover { transform: scale(1.05); box-shadow: 0 4px 12px rgba(0,0,0,0.15); }
+    @keyframes fadeInUp { from { opacity: 0; transform: translateY(20px); } to { opacity: 1; transform: translateY(0); } }
+    /* Delay variables */
+    #button-container .button:nth-child(1) { --i: 0; }
+    #button-container .button:nth-child(2) { --i: 1; }
+    #button-container .button:nth-child(3) { --i: 2; }
+    #button-container .button:nth-child(4) { --i: 3; }
+    #button-container .button:nth-child(5) { --i: 4; }
+    #button-container .button:nth-child(6) { --i: 5; }
+    #button-container .button:nth-child(7) { --i: 6; }
+    #button-container .button:nth-child(8) { --i: 7; }
+    #button-container .button:nth-child(9) { --i: 8; }
+    #button-container .button:nth-child(10) { --i: 9; }
+    #button-container .button:nth-child(11) { --i: 10; }
+    #button-container .button:nth-child(12) { --i: 11; }
+    #button-container .button:nth-child(13) { --i: 12; }
 
-  /* Footer */
-  .footer {
-    background: var(--footer-bg);
-    color: var(--white);
-    text-align: center;
-    padding: 20px;
-  }
-
-  /* Sticky footer via flexbox: body flex column, main flex:1 */
+    /* Footer */
+    .footer { background: var(--footer-bg); color: var(--white); text-align: center; padding: 20px; }
   </style>
 </head>
 <body>
   <header class="header">
     <div class="logos">
       <a href="https://www.nhs.uk/" target="_blank">
-        <img src="images/logos/left-logo.png" alt="Left Logo" class="logo-left">
+        <img src="images/logos/left-logo.png" alt="Left Logo" class="logo-left" />
       </a>
       <a href="https://www.hospitaltv.co.uk/products/mycare-tv/" target="_blank">
-        <img src="images/logos/right-logo.png" alt="Right Logo" class="logo-right">
-      </a>     
+        <img src="images/logos/right-logo.png" alt="Right Logo" class="logo-right" />
+      </a>
     </div>
   </header>
 
   <main class="container" id="button-container">
-    <!-- Copy your existing button blocks here -->
+    <a href="pages/WatchTV.html" class="button">
+      <div class="button-content">
+        <div class="button-text">
+          <span class="description">Watch</span>
+          <span class="title">TV</span>
+        </div>
+        <div class="button-icon"><img src="images/icons/tv.png" alt="Icon" /></div>
+      </div>
+    </a>
+    <a href="pages/WatchTVsubs.html" class="button">
+      <div class="button-content">
+        <div class="button-text">
+          <span class="description">Watch</span>
+          <span class="title">TV with Subtitles</span>
+        </div>
+        <div class="button-icon"><img src="images/icons/subs.png" alt="Icon" /></div>
+      </div>
+    </a>
+    <a href="pages/Radio.html" class="button">
+      <div class="button-content">
+        <div class="button-text">
+          <span class="description">Listen to</span>
+          <span class="title">Radio</span>
+        </div>
+        <div class="button-icon"><img src="images/icons/radio.png" alt="Icon" /></div>
+      </div>
+    </a>
+    <a href="pages/ChapelTV.html" class="button">
+      <div class="button-content">
+        <div class="button-text">
+          <span class="description">Watch</span>
+          <span class="title">Chapel TV</span>
+        </div>
+        <div class="button-icon"><img src="images/icons/chapel.png" alt="Icon" /></div>
+      </div>
+    </a>
+    <a href="pages/CatchupTV.html" class="button">
+      <div class="button-content">
+        <div class="button-text">
+          <span class="description">Watch</span>
+          <span class="title">Catchup TV and Streaming Services</span>
+        </div>
+        <div class="button-icon"><img src="images/icons/catchup.png" alt="Icon" /></div>
+      </div>
+    </a>
+    <a href="pages/Games.html" class="button">
+      <div class="button-content">
+        <div class="button-text">
+          <span class="description">Play</span>
+          <span class="title">Web Games</span>
+        </div>
+        <div class="button-icon"><img src="images/icons/games.png" alt="Icon" /></div>
+      </div>
+    </a>
+    <a href="http://nhs.uk" target="_blank" class="button">
+      <div class="button-content">
+        <div class="button-text">
+          <span class="description">Complete our</span>
+          <span class="title">Patient Survey</span>
+        </div>
+        <div class="button-icon"><img src="images/icons/survey.png" alt="Icon" /></div>
+      </div>
+    </a>
+    <a href="http://nhs.uk" target="_blank" class="button">
+      <div class="button-content">
+        <div class="button-text">
+          <span class="description">Complete our</span>
+          <span class="title">Friends and Family Survey</span>
+        </div>
+        <div class="button-icon"><img src="images/icons/survey.png" alt="Icon" /></div>
+      </div>
+    </a>
+    <a href="https://www.youtube.com/watch?v=ESYDPnY5_1A" target="_blank" class="button">
+      <div class="button-content">
+        <div class="button-text">
+          <span class="description">Watch</span>
+          <span class="title">Patient Education</span>
+        </div>
+        <div class="button-icon"><img src="images/icons/education.png" alt="Icon" /></div>
+      </div>
+    </a>
+    <a href="https://www.bhf.org.uk/-/media/files/information-and-support/publications/heart-conditions/understanding-series/u005-understanding-smoking_download-0818.pdf?rev=4133537f8f814a99ae796c701028595f" target="_blank" class="button">
+      <div class="button-content">
+        <div class="button-text">
+          <span class="description">View</span>
+          <span class="title">Information Leaflet</span>
+        </div>
+        <div class="button-icon"><img src="images/icons/doc.png" alt="Icon" /></div>
+      </div>
+    </a>
+    <a href="https://nhscharitiestogether.co.uk/" target="_blank" class="button">
+      <div class="button-content">
+        <div class="button-text">
+          <span class="description">NHS</span>
+          <span class="title">Charities Together</span>
+        </div>
+        <div class="button-icon"><img src="images/icons/charity.png" alt="Icon" /></div>
+      </div>
+    </a>
+    <a href="https://musicmemories.bbcrewind.co.uk/home" target="_blank" class="button">
+      <div class="button-content">
+        <div class="button-text">
+          <span class="description">Watch</span>
+          <span class="title">BBC Music Memories</span>
+        </div>
+        <div class="button-icon"><img src="images/icons/arrow.png" alt="Icon" /></div>
+      </div>
+    </a>
+    <a href="https://www.bbc.co.uk/topics/c01yxyz46myt" target="_blank" class="button">
+      <div class="button-content">
+        <div class="button-text">
+          <span class="description">Watch</span>
+          <span class="title">BBC Archive</span>
+        </div>
+        <div class="button-icon"><img src="images/icons/arrow.png" alt="Icon" /></div>
+      </div>
+    </a>
   </main>
 
   <footer class="footer">
     <a href="https://www.hospitaltv.co.uk/" target="_blank">
-      <img src="images/logos/footer-image.png" alt="Footer Image" class="footer-image">
+      <img class="footer-image" src="images/logos/footer-image.png" alt="Footer Image" />
     </a>
   </footer>
 </body>
