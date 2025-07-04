@@ -12,7 +12,7 @@
       --background: #F4F4F4;
       --text:       #333;
       --white:      #fff;
-      --footer-bg:  #222;
+      --footer-bg:  #fff;
       --transition: all 0.3s ease;
     }
 
@@ -28,33 +28,61 @@
     .logo-right { animation-delay: 0.2s; }
     @keyframes slideIn { from { opacity: 0; transform: translateY(-20px); } to { opacity: 1; transform: translateY(0); } }
 
-    /* Main Buttons */
-    .container { flex: 1; max-width: 1200px; margin: 20px auto; display: grid; gap: 20px; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); padding: 0 20px; }
-    .button { background: var(--white); border-radius: 12px; overflow: hidden; text-decoration: none; color: var(--text);
-               display: flex; align-items: center; justify-content: space-between; padding: 15px;
-               box-shadow: 0 2px 8px rgba(0,0,0,0.1); transform: translateY(20px); opacity: 0;
-               animation: fadeInUp 0.5s ease forwards; animation-delay: calc(var(--i) * 0.1s);
-               transition: var(--transition);
+    /* Main Buttons: full-width columns with side margin */
+    .container {
+      flex: 1;
+      width: 100%;
+      max-width: 1200px;
+      margin: 20px auto;
+      padding: 0 20px;
+      display: grid;
+      gap: 20px;
+      grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
     }
-    .button:hover { transform: scale(1.05); box-shadow: 0 4px 12px rgba(0,0,0,0.15); }
+    .button {
+      background: var(--primary);
+      color: var(--white);
+      border-radius: 12px;
+      overflow: hidden;
+      text-decoration: none;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 15px;
+      box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+      transform: translateY(20px);
+      opacity: 0;
+      animation: fadeInUp 0.5s ease forwards;
+      animation-delay: calc(var(--i) * 0.1s);
+      transition: var(--transition);
+    }
+    .button:hover {
+      transform: scale(1.05);
+      box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+    }
     @keyframes fadeInUp { from { opacity: 0; transform: translateY(20px); } to { opacity: 1; transform: translateY(0); } }
-    /* Delay variables */
-    #button-container .button:nth-child(1) { --i: 0; }
-    #button-container .button:nth-child(2) { --i: 1; }
-    #button-container .button:nth-child(3) { --i: 2; }
-    #button-container .button:nth-child(4) { --i: 3; }
-    #button-container .button:nth-child(5) { --i: 4; }
-    #button-container .button:nth-child(6) { --i: 5; }
-    #button-container .button:nth-child(7) { --i: 6; }
-    #button-container .button:nth-child(8) { --i: 7; }
-    #button-container .button:nth-child(9) { --i: 8; }
+    /* Stagger delays */
+    #button-container .button:nth-child(1)  { --i: 0; }
+    #button-container .button:nth-child(2)  { --i: 1; }
+    #button-container .button:nth-child(3)  { --i: 2; }
+    #button-container .button:nth-child(4)  { --i: 3; }
+    #button-container .button:nth-child(5)  { --i: 4; }
+    #button-container .button:nth-child(6)  { --i: 5; }
+    #button-container .button:nth-child(7)  { --i: 6; }
+    #button-container .button:nth-child(8)  { --i: 7; }
+    #button-container .button:nth-child(9)  { --i: 8; }
     #button-container .button:nth-child(10) { --i: 9; }
     #button-container .button:nth-child(11) { --i: 10; }
     #button-container .button:nth-child(12) { --i: 11; }
     #button-container .button:nth-child(13) { --i: 12; }
 
     /* Footer */
-    .footer { background: var(--footer-bg); color: var(--white); text-align: center; padding: 20px; }
+    .footer {
+      background: var(--footer-bg);
+      color: var(--text);
+      text-align: center;
+      padding: 20px;
+    }
   </style>
 </head>
 <body>
@@ -131,8 +159,8 @@
           <span class="title">Patient Survey</span>
         </div>
         <div class="button-icon"><img src="images/icons/survey.png" alt="Icon" /></div>
-      </div>
-    </a>
+      </div
+    ></a>
     <a href="http://nhs.uk" target="_blank" class="button">
       <div class="button-content">
         <div class="button-text">
@@ -191,7 +219,7 @@
 
   <footer class="footer">
     <a href="https://www.hospitaltv.co.uk/" target="_blank">
-      <img class="footer-image" src="images/logos/footer-image.png" alt="Footer Image" />
+      <img src="images/logos/footer-image.png" alt="Footer Image" />
     </a>
   </footer>
 </body>
