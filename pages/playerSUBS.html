@@ -62,22 +62,24 @@
   <script src="https://cdn.jsdelivr.net/npm/hls.js@latest"></script>
   <script>
     function getQueryParams() {
-      const p = new URLSearchParams(window.location.search);
+      const params = new URLSearchParams(window.location.search);
       return {
-        url:   p.get('url'),
-        title: p.get('title'),
-        logo:  p.get('logo')
+        url:   params.get('url'),
+        title: params.get('title'),
+        logo:  params.get('logo')
       };
     }
+
     function isSafari() {
       return /^((?!chrome|android).)*safari/i.test(navigator.userAgent);
     }
+
     function isMobile() {
       return /iPhone|iPad|iPod|Android/i.test(navigator.userAgent);
     }
 
     document.addEventListener('DOMContentLoaded', () => {
-      const {url, title, logo} = getQueryParams();
+      const { url, title, logo } = getQueryParams();
       const video = document.getElementById('video-player');
 
       if (title) document.getElementById('title').innerText = title;
@@ -85,21 +87,23 @@
 
       function setupHls() {
         const hls = new Hls({
-          maxBufferLength:            5,
-          backBufferLength:           3,
+          // start at live edge
+          startPosition:              -1,
+          maxBufferLength:            90,
+          backBufferLength:           30,
           maxBufferHole:              0.5,
-          liveSyncDurationCount:      1,
+          liveSyncDurationCount:      3,
+          liveMaxLatencyDurationCount: 5,
           manifestLoadingMaxRetry:    6,
           manifestLoadingRetryDelay:  1000,
           manifestLoadingTimeOut:     10000,
           xhrSetup: (xhr) => {
             xhr.setRequestHeader('Cache-Control', 'no-cache');
             xhr.setRequestHeader('Pragma', 'no-cache');
-          },
-          startFragPrefetch:          true
+          }
         });
 
-        // cache-buster on each manifest
+        // cache-buster on each playlist fetch
         hls.on(Hls.Events.MANIFEST_LOADING, (_evt, data) => {
           const base = data.url.split('?')[0];
           data.url = base + '?r=' + Date.now();
@@ -107,35 +111,13 @@
 
         hls.attachMedia(video);
 
-        // detect stalls and skip forward into buffered range
-        let lastTime = 0, stallTimer = null;
-        video.addEventListener('timeupdate', () => {
-          if (video.currentTime === lastTime) {
-            if (!stallTimer) {
-              stallTimer = setTimeout(() => {
-                const buf = video.buffered;
-                if (buf.length) {
-                  const end = buf.end(buf.length - 1);
-                  if (end > video.currentTime + 0.5) {
-                    console.warn(`Stall detected, seeking from ${video.currentTime} to ${end - 0.1}`);
-                    video.currentTime = end - 0.1;
-                  }
-                }
-              }, 1500);
-            }
-          } else {
-            clearTimeout(stallTimer);
-            stallTimer = null;
-          }
-          lastTime = video.currentTime;
-        });
-
         hls.on(Hls.Events.MEDIA_ATTACHED, () => {
           hls.loadSource(url);
+          // explicitly start loading from live edge
+          hls.startLoad(-1);
         });
 
         hls.on(Hls.Events.MANIFEST_PARSED, () => {
-          hls.nextLevel = 0; // start low to fill buffer
           video.play().catch(e => console.error('Play error:', e));
         });
 
@@ -151,7 +133,7 @@
         });
       }
 
-      // choose playback method
+      // determine playback path
       if (isSafari() || isMobile()) {
         video.src = url;
         video.addEventListener('loadedmetadata', () => video.play());
