@@ -5,21 +5,17 @@
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <title>TV Player</title>
   <link rel="icon" href="../images/icons/tabIcon.png">
+  <!-- Video.js styles -->
   <link href="https://unpkg.com/video.js/dist/video-js.css" rel="stylesheet">
-  <link rel="stylesheet" href="../styles.css">
   <style>
-    body, html { margin:0; padding:0; background:black; color:white }
-    .header { text-align:center; padding:10px }
-    .logos img { height:40px; margin:0 10px }
-    .container { text-align:center; margin:10px }
-    .home-button, .ch-button { margin:0 5px; color:white; text-decoration:none }
-    .home-button-icon, .ch-button-icon { vertical-align:middle; width:24px }
-    .home-button-text { margin-left:5px }
-    #logo-container, #title-container { text-align:center; margin-top:10px }
-    #logo { max-width:200px }
-    #video-container { text-align:center; margin:20px }
-    .video-js { width:100%; max-width:100%; height:auto; }
-    .footer { text-align:center; padding:10px }
+    body,html{margin:0;padding:0;background:#000;color:#fff}
+    .header{text-align:center;padding:10px}
+    .logos img{height:40px;margin:0 10px}
+    .container{text-align:center;margin:10px}
+    #logo-container,#title-container{text-align:center;margin:10px}
+    #video-container{position:relative;max-width:100%;margin:20px auto}
+    .video-js{width:100%;height:auto;background:#000}
+    .footer{text-align:center;padding:10px}
   </style>
 </head>
 <body>
@@ -36,21 +32,17 @@
 
   <div class="container">
     <a href="../index.html" class="home-button">
-      <img src="../images/icons/home.png" class="home-button-icon" alt="Home">
-      <span class="home-button-text">Home</span>
+      <img src="../images/icons/home.png" alt="Home" style="width:24px;vertical-align:middle">
+      Home
     </a>
     <a href="#" onclick="history.back();return false;" class="ch-button">
-      <img src="../images/icons/menu.png" class="ch-button-icon" alt="Menu">
-      <span class="home-button-text">Ch. List</span>
+      <img src="../images/icons/menu.png" alt="Menu" style="width:24px;vertical-align:middle">
+      Ch. List
     </a>
   </div>
 
-  <div id="logo-container">
-    <img id="logo" src="" alt="Logo">
-  </div>
-  <div id="title-container">
-    <h1 id="title"></h1>
-  </div>
+  <div id="logo-container"><img id="logo" src="" alt="Logo" style="max-width:200px"></div>
+  <div id="title-container"><h1 id="title"></h1></div>
 
   <div id="video-container">
     <video
@@ -60,8 +52,8 @@
       autoplay
       muted
       preload="auto"
-      data-setup='{}'
-    ></video>
+      data-setup='{}'>
+    </video>
   </div>
 
   <div class="footer">
@@ -70,46 +62,54 @@
     </a>
   </div>
 
+  <!-- Video.js + VHS -->
   <script src="https://unpkg.com/video.js/dist/video.js"></script>
   <script>
-  (function(){
-    const params    = new URLSearchParams(window.location.search);
-    const streamUrl = params.get('url');
-    const titleText = params.get('title');
-    const logoUrl   = params.get('logo');
+    (function(){
+      const params    = new URLSearchParams(window.location.search);
+      const streamUrl = params.get('url');
+      const titleText = params.get('title');
+      const logoUrl   = params.get('logo');
 
-    // Set title/logo
-    if (titleText) document.getElementById('title').textContent = titleText;
-    if (logoUrl)   document.getElementById('logo').src = logoUrl;
+      if (titleText) document.getElementById('title').textContent = titleText;
+      if (logoUrl)   document.getElementById('logo').src = logoUrl;
 
-    // Initialize Video.js
-    const player = videojs('video-player', {
-      html5: {
-        // let VHS (Video.js HLS) handle the m3u8
-        hls: { overrideNative: true },
-        nativeAudioTracks: false,
-        nativeVideoTracks: false
-      },
-      liveui: true
-    });
+      const player = videojs('video-player', {
+        html5: {
+          hls: {
+            overrideNative: true,
+            // ensure mux.js caption parsing is active
+            enableLowInitialPlaylist: true
+          },
+          nativeAudioTracks: false,
+          nativeVideoTracks: false
+        },
+        liveui: true
+      });
 
-    player.ready(() => {
-      player.src({ src: streamUrl, type: 'application/x-mpegURL' });
-      player.play().catch(()=>{});
-    });
+      player.ready(() => {
+        player.src({ src: streamUrl, type: 'application/x-mpegURL' });
+        // leave poster (logo) up until we get the first frame
+        if (logoUrl) player.poster(logoUrl);
 
-    // Error fallback: if VHS fails, try native
-    player.on('error', () => {
-      const err = player.error();
-      console.error('Video.js error', err);
-      if (player.techName_ !== 'Html5') return;
-      // if native HLS is available, switch
-      if (videojs.browser.IS_SAFARI && player.canPlayType('application/vnd.apple.mpegurl')) {
-        player.src({ src: streamUrl, type: 'application/vnd.apple.mpegurl' });
+        player.one('loadedmetadata', () => {
+          // first frame is ready, clear poster
+          player.poster('');
+        });
+
         player.play().catch(()=>{});
-      }
-    });
-  })();
+      });
+
+      // fallback to native on fatal VHS errors
+      player.on('error', () => {
+        const err = player.error();
+        console.error('VHS error:', err);
+        if (videojs.browser.IS_SAFARI && player.canPlayType('application/vnd.apple.mpegurl')) {
+          player.src({ src: streamUrl, type: 'application/vnd.apple.mpegurl' });
+          player.play().catch(()=>{});
+        }
+      });
+    })();
   </script>
 </body>
 </html>
