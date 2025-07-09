@@ -1,0 +1,132 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <title>TV Player</title>
+  <style>
+    body,html{margin:0;padding:0;background:#000;color:#fff;font-family:sans-serif}
+    header{display:flex;align-items:center;padding:10px;background:#111}
+    header img{width:32px;height:32px;object-fit:contain;margin-right:10px}
+    header h1{font-size:1.2rem;margin:0}
+    video{width:100%;max-width:800px;display:block;margin:20px auto;background:#000}
+  </style>
+  <!-- hls.js -->
+  <script src="https://cdn.jsdelivr.net/npm/hls.js@latest"></script>
+  <!-- CCExtractor-WASM (replace with latest version) -->
+  <script src="https://unpkg.com/ccextractor-wasm@1.1.0/dist/ccextractor-wasm.js"></script>
+</head>
+<body>
+
+  <header>
+    <img id="logo" src="" alt="Channel Icon">
+    <h1 id="title">Live Stream</h1>
+  </header>
+
+  <video id="video" controls autoplay muted></video>
+
+  <script>
+  (async function() {
+    // 1) Grab params
+    const p      = new URLSearchParams(location.search);
+    const url    = p.get('url');
+    const title  = p.get('title') || 'Live Stream';
+    const logo   = p.get('logo')  || '';
+
+    document.getElementById('title').textContent = title;
+    if (logo) document.getElementById('logo').src = logo;
+    else      document.getElementById('logo').style.display = 'none';
+
+    const video = document.getElementById('video');
+
+    // 2) Create a WebVTT text track for captions
+    const ccTrack = video.addTextTrack('subtitles','English','en');
+    ccTrack.mode = 'showing';
+
+    // 3) Instantiate CCExtractor-WASM
+    const ccModule = await CCExt.WASM();  // exposes `ccModule.extractCaptions(buffer)` → WebVTT text
+
+    // 4) Custom HLS.js loader that pipes each TS fragment through CCExtractor
+    class CCExtractorLoader {
+      constructor(config) {
+        this.loader = new Hls.DefaultConfig.loader(config);
+      }
+      load(context, config, callbacks) {
+        if (context.type === 'fragment') {
+          fetch(context.url)
+            .then(r => r.arrayBuffer())
+            .then(buffer => {
+              // a) run CCExtractor on the TS bytes
+              const tsBytes = new Uint8Array(buffer);
+              const vttText = ccModule.extractCaptions(tsBytes);
+
+              // b) parse that VTT and inject cues
+              parseAndInjectVTT(vttText, ccTrack);
+
+              // c) hand raw TS back to hls.js
+              callbacks.onSuccess(
+                { data: buffer, url: context.url, response: buffer },
+                { loaded: buffer.byteLength, total: buffer.byteLength },
+                context
+              );
+            })
+            .catch(err => callbacks.onError({ code: 0, text: err.message }, context));
+        } else {
+          // non-fragment loads (manifests, etc)
+          this.loader.load(context, config, callbacks);
+        }
+      }
+      abort()  { this.loader.abort(); }
+      destroy(){ this.loader.destroy(); }
+    }
+
+    // 5) Simple VTT parser (split cues by blank line)
+    function parseAndInjectVTT(vttText, track) {
+      // ensure it starts with WEBVTT
+      const body = vttText.replace(/^WEBVTT.*\n/, '').trim();
+      body.split('\n\n').forEach(block => {
+        const lines = block.split('\n').filter(Boolean);
+        if (lines.length < 2) return;
+        const time = lines.shift().split(/\s+-->\s+/);
+        const start = parseTime(time[0]);
+        const end   = parseTime(time[1]);
+        const text  = lines.join('\n');
+        try {
+          track.addCue(new VTTCue(start, end, text));
+        } catch(e) {
+          console.warn('Cue failed', e);
+        }
+      });
+    }
+    function parseTime(ts) {
+      // "hh:mm:ss.mmm" or "mm:ss.mmm"
+      const parts = ts.split(':').map(parseFloat);
+      if (parts.length === 3) {
+        return parts[0]*3600 + parts[1]*60 + parts[2];
+      } else {
+        return parts[0]*60 + parts[1];
+      }
+    }
+
+    // 6) Instantiate HLS.js with our custom loader
+    if (Hls.isSupported()) {
+      const hls = new Hls({ loader: CCExtractorLoader });
+      hls.attachMedia(video);
+      hls.on(Hls.Events.MEDIA_ATTACHED, () => hls.loadSource(url));
+      hls.on(Hls.Events.MANIFEST_PARSED, () => video.play().catch(()=>{}));
+      hls.on(Hls.Events.ERROR, (_, data) => {
+        console.error('hls.js error', data);
+        if (data.fatal) hls.destroy();
+      });
+    }
+    // fallback native HLS (Safari)
+    else if (video.canPlayType('application/vnd.apple.mpegurl')) {
+      video.src = url;
+    }
+    else {
+      console.error('HLS not supported');
+    }
+  })();
+  </script>
+</body>
+</html>
