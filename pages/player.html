@@ -1,0 +1,137 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>TV Player</title>
+  <link rel="icon" type="image/png" href="../images/icons/tabIcon.png">
+  <link rel="stylesheet" href="../styles.css">
+  <!-- Created by James Randall for Airwave Europe Ltd. -->
+  <style>
+    body, html { margin:0; padding:0; background:black; color:white; }
+    #video-container { text-align:center; margin-top:20px; }
+    video { max-width:100%; width:100%; height:auto; background:black; }
+    .header, .footer { text-align:center; padding:10px; }
+    .logos img { height:40px; margin:0 10px; vertical-align:middle; }
+    .container { text-align:center; margin-top:10px; }
+    .home-button, .ch-button { display:inline-block; margin:0 5px; text-decoration:none; color:white; }
+    .home-button-icon, .ch-button-icon { vertical-align:middle; width:24px; }
+    .home-button-text { margin-left:5px; }
+  </style>
+</head>
+<body>
+  <div class="header">
+    <a href="https://www.nhs.uk/" target="_blank"><img src="../images/logos/left-logo.png" alt="Left Logo"></a>
+    <a href="https://www.hospitaltv.co.uk/products/mycare-tv/" target="_blank"><img src="../images/logos/right-logo.png" alt="Right Logo"></a>
+  </div>
+
+  <div class="container">
+    <a href="../index.html" class="home-button">
+      <img src="../images/icons/home.png" alt="Home Icon" class="home-button-icon">
+      <span class="home-button-text">Home</span>
+    </a>
+    <a href="#" onclick="history.back(); return false;" class="ch-button">
+      <img src="../images/icons/menu.png" alt="Menu Icon" class="ch-button-icon">
+      <span class="home-button-text">Ch. List</span>
+    </a>
+  </div>
+
+  <div id="logo-container" style="text-align:center; margin-top:20px;">
+    <img id="logo" src="" alt="Logo" style="max-width:200px;">
+  </div>
+  <div id="title-container" style="text-align:center; margin-top:10px;">
+    <h1 id="title"></h1>
+  </div>
+
+  <div id="video-container">
+    <video id="video-player" controls autoplay muted></video>
+  </div>
+
+  <div class="footer">
+    <a href="https://www.hospitaltv.co.uk/" target="_blank">
+      <img src="../images/logos/footer-image.png" alt="Footer Image" style="height:40px;">
+    </a>
+  </div>
+
+  <script src="https://cdn.jsdelivr.net/npm/hls.js@latest"></script>
+  <script>
+  (function(){
+    const params    = new URLSearchParams(window.location.search);
+    const streamUrl = params.get('url');
+    const titleText = params.get('title');
+    const logoUrl   = params.get('logo');
+
+    const video = document.getElementById('video-player');
+    if (titleText) document.getElementById('title').textContent = titleText;
+    if (logoUrl)   document.getElementById('logo').src = logoUrl;
+
+    // Detect iOS/macOS Safari
+    const ua = navigator.userAgent;
+    const isApple = /iP(hone|od|ad)/.test(ua) || 
+                    (ua.includes('Safari') && !ua.includes('Chrome') && !ua.includes('CriOS') && !ua.includes('FxiOS'));
+
+    function nativePlay() {
+      video.src = streamUrl;
+      video.addEventListener('loadedmetadata', ()=>video.play().catch(()=>{}));
+    }
+
+    if (isApple && video.canPlayType('application/vnd.apple.mpegurl')) {
+      // Use native HLS on Apple platforms
+      nativePlay();
+    }
+    else if (Hls.isSupported()) {
+      // Fallback to hls.js for all other browsers/devices
+      const hls = new Hls({
+        startPosition:               -1,
+        maxBufferLength:             120,
+        backBufferLength:            60,
+        maxBufferHole:               0.5,
+        liveSyncDurationCount:       3,
+        liveMaxLatencyDurationCount: 5,
+        fragLoadingTimeOut:          20000,
+        fragLoadingMaxRetry:         6,
+        fragLoadingRetryDelay:       1000,
+        manifestLoadingTimeOut:      20000,
+        manifestLoadingMaxRetry:     6,
+        manifestLoadingRetryDelay:   1000,
+        startFragPrefetch:           true,
+        enableWorker:                true,
+        lowLatencyMode:              false,
+        capLevelToPlayerSize:        true,
+        xhrSetup: (xhr) => {
+          xhr.setRequestHeader('Cache-Control', 'no-cache');
+          xhr.setRequestHeader('Pragma', 'no-cache');
+        }
+      });
+
+      hls.on(Hls.Events.MANIFEST_LOADING, (_evt, data) => {
+        data.url = data.url.split('?')[0] + '?t=' + Date.now();
+      });
+
+      hls.attachMedia(video);
+      hls.on(Hls.Events.MEDIA_ATTACHED, () => hls.loadSource(streamUrl));
+      hls.on(Hls.Events.MANIFEST_PARSED, () => {
+        hls.nextLevel = -1; // auto quality
+        video.play().catch(()=>{});
+      });
+
+      hls.on(Hls.Events.ERROR, (_evt, data) => {
+        console.error('HLS.js error', data);
+        if (data.type === Hls.ErrorTypes.NETWORK_ERROR) {
+          hls.startLoad();
+        } else if (data.type === Hls.ErrorTypes.MEDIA_ERROR) {
+          hls.recoverMediaError();
+        } else if (data.fatal) {
+          hls.destroy();
+          nativePlay(); // fallback to native if available
+        }
+      });
+    }
+    else {
+      // No HLS support
+      console.error('HLS not supported');
+    }
+  })();
+  </script>
+</body>
+</html>
