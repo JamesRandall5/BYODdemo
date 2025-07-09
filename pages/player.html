@@ -1,0 +1,118 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>TV Player</title>
+  <link rel="icon" type="image/png" href="../images/icons/tabIcon.png">
+  <link rel="stylesheet" href="../styles.css">
+  <style>
+    body, html { margin:0; padding:0; background:black; color:white; }
+    #video-container { text-align:center; margin:20px; }
+    video { max-width:100%; width:100%; background:black; }
+    .header, .footer { text-align:center; padding:10px; }
+    .logos img { height:40px; margin:0 10px; vertical-align:middle; }
+    .container { text-align:center; margin:10px; }
+    .home-button, .ch-button { display:inline-block; margin:0 5px; text-decoration:none; color:white; }
+    .home-button-icon, .ch-button-icon { vertical-align:middle; width:24px; }
+    .home-button-text { margin-left:5px; }
+  </style>
+</head>
+<body>
+  <div class="header">
+    <a href="https://www.nhs.uk/" target="_blank"><img src="../images/logos/left-logo.png" alt="Left Logo"></a>
+    <a href="https://www.hospitaltv.co.uk/products/mycare-tv/" target="_blank"><img src="../images/logos/right-logo.png" alt="Right Logo"></a>
+  </div>
+
+  <div class="container">
+    <a href="../index.html" class="home-button">
+      <img src="../images/icons/home.png" alt="Home Icon" class="home-button-icon">
+      <span class="home-button-text">Home</span>
+    </a>
+    <a href="#" onclick="history.back(); return false;" class="ch-button">
+      <img src="../images/icons/menu.png" alt="Menu Icon" class="ch-button-icon">
+      <span class="home-button-text">Ch. List</span>
+    </a>
+  </div>
+
+  <div id="logo-container" style="text-align:center; margin-top:20px;">
+    <img id="logo" src="" alt="Logo" style="max-width:200px;">
+  </div>
+  <div id="title-container" style="text-align:center; margin-top:10px;">
+    <h1 id="title"></h1>
+  </div>
+
+  <div id="video-container">
+    <video id="video-player" controls autoplay muted></video>
+  </div>
+
+  <div class="footer">
+    <a href="https://www.hospitaltv.co.uk/" target="_blank">
+      <img src="../images/logos/footer-image.png" alt="Footer Image" style="height:40px;">
+    </a>
+  </div>
+
+  <!-- Shaka Player -->
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/shaka-player/4.2.1/shaka-player.compiled.js"></script>
+  <script>
+  (function(){
+    const params    = new URLSearchParams(window.location.search);
+    const streamUrl = params.get('url');
+    const titleText = params.get('title');
+    const logoUrl   = params.get('logo');
+    const video     = document.getElementById('video-player');
+
+    if (titleText) document.getElementById('title').textContent = titleText;
+    if (logoUrl)   document.getElementById('logo').src = logoUrl;
+
+    // detect Apple browsers
+    const ua = navigator.userAgent;
+    const isApple = /iP(hone|od|ad)/.test(ua) ||
+                    (ua.includes('Safari') && !ua.includes('Chrome') && !ua.includes('CriOS') && !ua.includes('FxiOS'));
+
+    function initNative() {
+      video.src = streamUrl;
+      video.addEventListener('loadedmetadata', ()=> video.play().catch(()=>{}));
+    }
+
+    function initShaka() {
+      shaka.polyfill.installAll();
+      if (!shaka.Player.isBrowserSupported()) {
+        console.error('Shaka Player not supported');
+        initNative();
+        return;
+      }
+      const player = new shaka.Player(video);
+      player.configure({
+        streaming: {
+          retryParameters: { maxAttempts: 5, baseDelay: 1000 },
+          rebufferingGoal: 15,   // keep 15s buffer
+          bufferingGoal:   30,   // fill 30s buffer
+          bufferBehind:    10    // keep 10s behind currentTime
+        },
+        manifest: {
+          retryParameters: { maxAttempts: 5, baseDelay: 1000 }
+        },
+        abr: { enabled: true, defaultBandwidthEstimate: 5e6 }
+      });
+      player.addEventListener('error', e => {
+        console.error('Shaka error', e.detail);
+      });
+      player.load(streamUrl).then(()=> {
+        console.log('Shaka loaded & playing');
+      }).catch(err => {
+        console.error('Shaka failed, falling back:', err);
+        initNative();
+      });
+    }
+
+    // pick path
+    if (isApple && video.canPlayType('application/vnd.apple.mpegurl')) {
+      initNative();
+    } else {
+      initShaka();
+    }
+  })();
+  </script>
+</body>
+</html>
